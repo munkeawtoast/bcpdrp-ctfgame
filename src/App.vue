@@ -1,17 +1,245 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from "vue";
+import HelloWorld from "./components/HelloWorld.vue";
+import Question from "./components/Question.vue";
+import ScoreSummary from "./components/ScoreSummary.vue";
+
+const questions = [
+  {
+    description:
+      "คุณสังเกตเห็นว่าปริมาณการเข้าชมเว็บไซต์ลดลงอย่างรวดเร็ว การกระทำแรกของคุณคืออะไร",
+    choices: [
+      {
+        choice: "วิเคราะห์ปริมาณการเข้าชมและตรวจสอบปัญหาของเซิร์ฟเวอร์",
+        impact: 20,
+      },
+      {
+        choice: "ละเว้นไว้ก่อน อาจเป็นความผันผวนชั่วคราว",
+        impact: -10,
+      },
+      {
+        choice: "โทรหาทีมการตลาดเพื่อสอบสวนปัญหา",
+        impact: -5,
+      },
+    ],
+  },
+  {
+    description: "ระบบซอฟต์แวร์ที่สำคัญล่มสลาย การตอบสนองทันทีของคุณคืออะไร",
+    choices: [
+      {
+        choice: "เรียกใช้แผนการกู้คืนจากภัยพิบัติและเปลี่ยนไปใช้ระบบสำรอง",
+        impact: 25,
+      },
+      {
+        choice: "พยายามรีสตาร์ทซอฟต์แวร์โดยไม่ต้องตรวจสอบเพิ่มเติม",
+        impact: -30,
+      },
+      {
+        choice: "แจ้งให้ทีมหยุดงานและจัดการในวันพรุ่งนี้",
+        impact: -15,
+      },
+    ],
+  },
+  {
+    description:
+      "คุณได้รับอีเมลนิรนามแจ้งเตือนเกี่ยวกับการละเมิดความปลอดภัยที่อาจเกิดขึ้น คุณจะทำอย่างไร",
+    choices: [
+      {
+        choice: "รายงานอีเมลไปยังทีมความปลอดภัยด้านไอทีทันที",
+        impact: 20,
+      },
+      {
+        choice: "เมินเฉย; อาจเป็นเรื่องหลอกลวง",
+        impact: -20,
+      },
+      {
+        choice: "ส่งต่ออีเมลไปให้เพื่อนร่วมงานเพื่อขอคำแนะนำ",
+        impact: -10,
+      },
+    ],
+  },
+  {
+    description:
+      "เกิดไฟไหม้ที่สำนักงานกลางของคุณ ทีมงานของคุณจะดำเนินการอย่างไร",
+    choices: [
+      {
+        choice: "อพยพออกจากอาคารทันทีและโทรเรียกดับเพลิง",
+        impact: 25,
+      },
+      {
+        choice: "พยายามดับไฟด้วยตนเองเพื่อประหยัดเวลา",
+        impact: -30,
+      },
+      {
+        choice: "รอคำสั่งจากผู้จัดการก่อนดำเนินการใดๆ",
+        impact: -15,
+      },
+    ],
+  },
+  {
+    description:
+      "เกิดภัยพิบัติทางธรรมชาติ เช่น พายุหมุนหรือแผ่นดินไหว ในพื้นที่ของคุณ บริษัทของคุณจะรับมืออย่างไร",
+    choices: [
+      {
+        choice:
+          "เปิดใช้งานแผน BCP และโยกย้ายพนักงานและอุปกรณ์ไปยังสถานที่ปลอดภัย",
+        impact: 25,
+      },
+      {
+        choice: "ให้พนักงานทำงานจากที่บ้านจนกว่าสถานการณ์จะกลับสู่ภาวะปกติ",
+        impact: 20,
+      },
+      {
+        choice: "ปิดบริษัทจนกว่าจะประเมินความเสียหายและทำการซ่อมแซมเสร็จสิ้น",
+        impact: -15,
+      },
+    ],
+  },
+  {
+    description:
+      "เกิดการโจมตีทางไซเบอร์ต่อบริษัทของคุณ บริษัทของคุณจะรับมืออย่างไร",
+    choices: [
+      {
+        choice:
+          "รายงานการโจมตีไปยังทีมความปลอดภัยด้านไอทีทันทีและแยกเครือข่ายออกจากอินเทอร์เน็ต",
+        impact: 25,
+      },
+      {
+        choice: "พยายามแก้ไขการละเมิดความปลอดภัยด้วยตนเอง",
+        impact: -30,
+      },
+      {
+        choice: "รอให้ทีมความปลอดภัยด้านไอทีแก้ไขปัญหาก่อนดำเนินการใดๆ",
+        impact: -15,
+      },
+    ],
+  },
+  {
+    description:
+      "พนักงานของคุณคนหนึ่งถูกขโมยข้อมูลสำคัญของบริษัท คุณจะทำอย่างไร",
+    choices: [
+      {
+        choice:
+          "รายงานการโจรกรรมข้อมูลไปยังทีมความปลอดภัยด้านไอทีทันทีและแจ้งให้พนักงานคนอื่นๆ ทราบ",
+        impact: 25,
+      },
+      {
+        choice: "พยายามติดต่อพนักงานคนนั้นเพื่อขอข้อมูลคืน",
+        impact: -30,
+      },
+      {
+        choice: "รอให้ทีมความปลอดภัยด้านไอทีสืบสวนก่อนดำเนินการใดๆ",
+        impact: -15,
+      },
+    ],
+  },
+  {
+    description:
+      "ระบบจ่ายไฟฟ้าหลักขัดข้อง ทำให้สำนักงานของคุณไม่มีไฟฟ้าใช้ คุณจะทำอย่างไร",
+    choices: [
+      {
+        choice: "เปิดใช้งานแผน BCP และเปลี่ยนไปใช้เครื่องกำเนิดไฟฟ้าสำรอง",
+        impact: 25,
+      },
+      {
+        choice:
+          "แจ้งให้พนักงานหยุดงานและทำงานจากที่บ้านจนกว่าไฟฟ้าจะกลับมาใช้ได้ตามปกติ",
+        impact: 10,
+      },
+      {
+        choice: "ปิดสำนักงานจนกว่าไฟฟ้าจะกลับมาใช้ได้ตามปกติ",
+        impact: -20,
+      },
+    ],
+  },
+  {
+    description:
+      "เกิดการประท้วงใหญ่ในพื้นที่ของคุณ ทำให้ไม่สามารถเดินทางได้ คุณจะทำอย่างไร",
+    choices: [
+      {
+        choice: "เปิดใช้งานแผน BCP และอนุญาตให้พนักงานทำงานจากที่บ้าน",
+        impact: 20,
+      },
+      {
+        choice: "แจ้งให้พนักงานหยุดงานและรอให้สถานการณ์สงบลงก่อน",
+        impact: -15,
+      },
+      {
+        choice: "จัดหารถรับส่งพนักงานไปยังสถานที่ทำงาน",
+        impact: -10,
+      },
+    ],
+  },
+  {
+    description:
+      "เกิดภัยพิบัติทางสังคม เช่น การระบาดของโรคระบาดหรือสงคราม ในพื้นที่ของคุณ บริษัทของคุณจะรับมืออย่างไร",
+    choices: [
+      {
+        choice: "เปิดใช้งานแผน BCP และอนุญาตให้พนักงานทำงานจากที่บ้าน",
+        impact: 25,
+      },
+      {
+        choice: "ปิดสำนักงานและจัดหาเงินช่วยเหลือพนักงาน",
+        impact: 10,
+      },
+      {
+        choice: "ย้ายสำนักงานไปยังสถานที่ปลอดภัย",
+        impact: -15,
+      },
+    ],
+  },
+];
+
+let currentIndex = ref(0);
+let choices = ref([
+  // {
+  //   choice: "Conduct a traffic analysis and check for server issues",
+  //   impact: 20,
+  // },
+  // {
+  //   choice: "Invoke the disaster recovery plan and switch to a backup system",
+  //   impact: 25,
+  // },
+  // {
+  //   choice: "Immediately report the email to the IT security team",
+  //   impact: 20,
+  // },
+]);
+
+function handleQuestionSubmit(choice) {
+  choices.value.push(choice);
+  currentIndex.value++;
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="question-index">
+    <!-- <img
+      class="logo"
+      src="./assets/logo.png"
+      alt="logo"
+      @mouseover="$event.target.src = './assets/logo-vue.png'"
+      @mouseout="$event.target.src = './assets/logo.png'"
+    /> -->
+    <h1>Business Continuity Plan & Disaster Recovery Plan</h1>
+    <h3 v-if="currentIndex !== questions.length">
+      Question {{ currentIndex + 1 }} of {{ questions.length }}
+    </h3>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <Question
+    v-for="(question, index) in questions"
+    v-show="currentIndex === index"
+    @submit="handleQuestionSubmit"
+    :index="index"
+    :is-last="index === questions.length - 1"
+    :question="question.description"
+    :choices="question.choices"
+  />
+  <ScoreSummary
+    v-if="currentIndex === questions.length"
+    :scores="choices"
+    :questions="questions"
+  />
 </template>
 
 <style scoped>
