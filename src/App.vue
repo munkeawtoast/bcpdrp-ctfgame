@@ -188,7 +188,11 @@ const questions = [
       },
     ],
   },
-];
+].toSorted(() => Math.random() - 0.5);
+
+questions.forEach((question) =>
+  question.choices.sort(() => Math.random() - 0.5)
+);
 
 let currentIndex = ref(0);
 let choices = ref([
