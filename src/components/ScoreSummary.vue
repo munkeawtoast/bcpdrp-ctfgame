@@ -25,13 +25,35 @@ const props = defineProps({
       <div class="score-summary__sum">
         <div class="score-summary__score-choice">Total</div>
         <div class="score-summary__score-impact">
-          {{ scores.reduce((sum, score) => sum + score.impact, 0) }}
+          {{ scored }}
         </div>
       </div>
     </div>
+    <h3 v-if="scored >= 150">
+      คุณทำได้ดีมาก
+      เท่านี้ก็มั่นใจได้ว่าบริษัทของคุณจะยังอยู่ได้แม้ว่าจะเจอกับอะไรก็ตาม
+    </h3>
+    <h3 v-else-if="scored >= 25 && scored < 150">
+      ในฐานะประทานบริษัทของคุณนั้นถือว่ายังทำได้ดี
+      แต่ก็ยังไม่ดีพอที่จะรองรับกับสถานการที่หลากหลาย ค่อยๆเรียนรู้ไปเรื่อยๆ
+      เดี๋ยวก็ดีเอง
+    </h3>
+    <h3 v-else>
+      บริษัทที่มีคุณเป็นหัวหน้าหรือผู้บริหารนั้นมีความเสี่ยงมาก
+      ไปเรียนรู้มาใหม่นะ
+    </h3>
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      scored: this.scores.reduce((sum, score) => sum + score.impact, 0),
+    };
+  },
+};
+</script>
 <style scoped>
 .score-summary {
   margin: 2em 0;

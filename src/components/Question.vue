@@ -13,13 +13,12 @@
       </label>
     </div>
     <div class="submit-container">
-      <button class="submit-button" @click="$emit('submit', selectedChoice)">
+      <button class="submit-button" @click="handleSubmit(selectedChoice)">
         {{ isLast ? "Submit" : "Next" }}
       </button>
     </div>
   </div>
 </template>
-
 <script>
 export default {
   name: "RadioButton",
@@ -41,6 +40,15 @@ export default {
       required: true,
     },
   },
+  methods: {
+    handleSubmit(val) {
+      if (!val) {
+        return;
+      }
+      this.$emit("submit", val);
+    },
+  },
+
   data() {
     return {
       selectedChoice: null,
